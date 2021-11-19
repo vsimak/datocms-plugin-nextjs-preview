@@ -11,6 +11,7 @@ const replacementFieldRegex = /\$[a-zA-Z_]+/g;
   fieldValue: plugin.getFieldValue(plugin.fieldPath),
   plugin,
 }))
+
 export default class Main extends Component {
   static propTypes = {
     plugin: PropTypes.object,
@@ -31,6 +32,7 @@ export default class Main extends Component {
     const {
       locale,
     } = plugin;
+
     
     this.unsubscribeLocale = plugin.addChangeListener('locale', (value) => {
       this.setState({ locale: value });
@@ -42,18 +44,19 @@ export default class Main extends Component {
 
       // Subscribe to changes for all fields that are used in the path
       matches.forEach((m) => {
-        fields[m] = plugin.getFieldValue(m, locale);
+        fields[m] = plugin.getFieldValue(m);
+
         this.unsubscribers.push(plugin.addFieldChangeListener(m, () => {
           this.setState(s => ({
             ...s,
             fields: {
               ...s,
-              [m]: plugin.getFieldValue(m, locale),
+              [m]: plugin.getFieldValue(m),
             },
           }));
+
         }));
       });
-
       this.setState({ 
         fields,
         locale,
@@ -78,7 +81,6 @@ export default class Main extends Component {
     const { plugin } = this.props;
     const { fields } = this.state;
     let { entityPath } = plugin.parameters.instance;
-
     Object.entries(fields).forEach(([field, value]) => {
       entityPath = entityPath.replace(`$${field}`, value);
     });
@@ -104,6 +106,7 @@ export default class Main extends Component {
     const {
       locale,
     } = this.state;
+
 
     if (plugin.itemStatus === 'new') {
       return <p className="new-msg">Must save entity at least once before previewing</p>;
