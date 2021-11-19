@@ -26,7 +26,7 @@
   "author": "Veljko Simakovic <vsimakovic@gmail.com>",
   "license": "ISC",
   "datoCmsPlugin": {
-    "title": "Next.js Preview Links",
+    "title": "Next.js Multilang Sidebar Preview Links",
     "previewImage": "docs/preview.png",
     "coverImage": "docs/cover.png",
     "entryPoint": "dist/index.html",
