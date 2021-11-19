@@ -21,12 +21,20 @@ export default class Main extends Component {
 
     this.state = {
       fields: {},
+      locale: {},
     };
   }
 
   componentDidMount() {
     const { plugin } = this.props;
     const matches = this.getPathReplacementFields();
+    const {
+      locale,
+    } = plugin;
+    
+    this.unsubscribeLocale = plugin.addChangeListener('locale', (value) => {
+      this.setState({ locale: value });
+    });
 
     if (matches) {
       const fields = {};
@@ -34,25 +42,29 @@ export default class Main extends Component {
 
       // Subscribe to changes for all fields that are used in the path
       matches.forEach((m) => {
-        fields[m] = plugin.getFieldValue(m);
-        this.unsubscribers.push(plugin.addFieldChangeListener(m, (value) => {
+        fields[m] = plugin.getFieldValue(m, locale);
+        this.unsubscribers.push(plugin.addFieldChangeListener(m, () => {
           this.setState(s => ({
             ...s,
             fields: {
               ...s,
-              [m]: value,
+              [m]: plugin.getFieldValue(m, locale),
             },
           }));
         }));
       });
 
-      this.setState({ fields });
+      this.setState({ 
+        fields,
+        locale,
+      });
     }
   }
 
   componentWillUnmount() {
     if (this.unsubscribers) {
       this.unsubscribers.forEach(unsub => unsub());
+      this.unsubscribeLocale();
     }
   }
 
@@ -88,16 +100,26 @@ export default class Main extends Component {
         },
       },
     } = plugin;
+    
+    const {
+      locale,
+    } = this.state;
 
     if (plugin.itemStatus === 'new') {
       return <p className="new-msg">Must save entity at least once before previewing</p>;
+    }
+    
+    let multiLang = false;
+    
+    if (plugin.site.attributes.locales.length > 1) {
+      multiLang = true;
     }
 
     const path = this.getEntityPath();
     const noSlashInstanceUrl = instanceUrl.replace(/\/$/, '');
 
-    const previewHref = `${noSlashInstanceUrl}${previewPath}?slug=${path}${previewSecret ? `&secret=${previewSecret}` : ''}`;
-    const liveHref = disablePreviewPath ? `${noSlashInstanceUrl}${disablePreviewPath}?slug=${path}` : `${noSlashInstanceUrl}${path}`;
+    const previewHref = `${noSlashInstanceUrl}${previewPath}?slug=${multiLang ? `/${locale}` : ''}${path}${previewSecret ? `&secret=${previewSecret}` : ''}`;
+    const liveHref = disablePreviewPath ? `${noSlashInstanceUrl}${disablePreviewPath}?slug=${multiLang ? `${locale}` : ''}${path}` : `${noSlashInstanceUrl}${multiLang ? `/${locale}` : ''}${path}`;
 
     return (
       <>
