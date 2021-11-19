@@ -1,6 +1,6 @@
 {
   "name": "datocms-plugin-nextjs-multilanguage-sidebar-preview",
-  "homepage": "https://github.com/vsimak/datocms-plugin-nextjs-preview",
+  "homepage": "https://github.com/vsimak/datocms-plugin-nextjs-preview-multilang-sidebar",
   "version": "0.1.0",
   "description": "Plugin that provides links to preview content in Next.js while using locale variable for multilanguage projects",
   "main": "index.js",
