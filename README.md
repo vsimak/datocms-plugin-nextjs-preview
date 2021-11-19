@@ -1,3 +1,6 @@
+Fork of https://github.com/wbobeirne/datocms-plugin-nextjs-preview
+Added multilanguage into the path.
+
 # Next.js Preview Links DatoCMS Plugin
 
 Plugin that adds quick links to preview & view your DatoCMS on a Next.js site.
