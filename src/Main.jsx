@@ -109,7 +109,7 @@ export default class Main extends Component {
 
 
     if (plugin.itemStatus === 'new') {
-      return <p className="new-msg">Must save entity at least once before previewing</p>;
+      return <p className="new-msg">Must save entity at least once before previewing!</p>;
     }
     
     let multiLang = false;
